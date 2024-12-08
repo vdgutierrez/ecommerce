@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>Catálogo de Productos</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/templatemo.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light shadow">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand text-success logo h1 align-self-center" href="#">
+                FAST
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="templatemo_main_nav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <span id="welcomeMessage" class="nav-link text-success"></span>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Close Header -->
+
+    <!-- Catalog Section -->
+    <section class="container py-5">
+        <div class="row text-center pt-3">
+            <div class="col-lg-6 m-auto">
+                <h1 class="h1">Catálogo de Productos</h1>
+            </div>
+        </div>
+        <div class="row" id="productList"></div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4">
+        <div class="container text-center">
+            <p>&copy; 2024 FAST Shop. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script>
+        async function fetchProducts() {
+            const token = localStorage.getItem('token'); // Obtiene el token almacenado
+            if (!token) {
+                alert('No estás autenticado. Redirigiendo a login...');
+                window.location.href = 'login.html'; // Redirige a login si no hay token
+                return;
+            }
+
+            // Decodifica el token para obtener el usuario (opcional)
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            const username = payload.sub.username || 'Usuario';
+
+            // Muestra el mensaje de bienvenida
+            document.getElementById('welcomeMessage').textContent = `Bienvenido, ${username}`;
+
+            try {
+                const response = await fetch('http://127.0.0.1:5002/catalog/products', {
+                    method: 'GET',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${token}`, // Incluye el token en el encabezado
+                    },
+                });
+
+                if (response.ok) {
+                    const products = await response.json();
+                    const productList = document.getElementById('productList');
+                    productList.innerHTML = ''; // Limpia la lista
+
+                    products.forEach((product) => {
+                        const col = document.createElement('div');
+                        col.className = 'col-12 col-md-4 mb-4';
+
+                        col.innerHTML = `
+                            <div class="card h-100">
+                                <img class="card-img-top" src="https://mkgabinet.com/wp-content/uploads/2022/07/caracteristicas-beneficios-producto-mejorar-ventas.jpg" alt="${product.name}">
+                                <div class="card-body">
+                                    <h5 class="card-title">${product.name}</h5>
+                                    <p class="card-text">Precio: $${product.price} <br> Stock: ${product.stock}</p>
+                                    <button class="btn btn-primary add-to-cart" data-id="${product.id}">Agregar</button>
+                                </div>
+                            </div>
+                        `;
+
+                        productList.appendChild(col);
+                    });
+
+                    // Agrega funcionalidad a los botones de agregar
+                    document.querySelectorAll('.add-to-cart').forEach((button) => {
+                        button.addEventListener('click', () => {
+                            alert('Producto agregado');
+                        });
+                    });
+                } else {
+                    alert('Error al cargar productos. Verifica tu autenticación.');
+                }
+            } catch (error) {
+                console.error('Error al conectar con el servidor:', error);
+            }
+        }
+
+        fetchProducts(); // Carga los productos al cargar la página
+    </script>
+</body>
+
+</html>

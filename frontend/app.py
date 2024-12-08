@@ -2,18 +2,13 @@ from flask import Flask, render_template
 
 app = Flask(__name__)
 
-@app.route('/')
-def index():
-    return render_template('index.html')
-
 @app.route('/login')
 def login():
-    return render_template('login.html')
+    return render_template('login.html')  # Busca en la carpeta templates/login.html
 
-@app.route('/register')
-def register():
-    return render_template('register.html')
+@app.route('/catalogo')
+def catalogo():
+    return render_template('catalogo.html')  # Busca en templates/catalogo.html
 
-@app.route('/catalog')
-def catalog():
-    return render_template('catalog.html')
+if __name__ == '__main__':
+    app.run(port=5000)

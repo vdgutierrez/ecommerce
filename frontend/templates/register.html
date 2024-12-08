@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <title>eCommerce - Registro</title>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link rel="apple-touch-icon" href="assets/img/apple-icon.png">
+    <link rel="shortcut icon" type="image/x-icon" href="assets/img/favicon.ico">
+
+    <link rel="stylesheet" href="assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="assets/css/templatemo.css">
+    <link rel="stylesheet" href="assets/css/custom.css">
+
+    <!-- Load fonts style after rendering the layout styles -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Roboto:wght@100;200;300;400;500;700;900&display=swap">
+    <link rel="stylesheet" href="assets/css/fontawesome.min.css">
+</head>
+
+<body>
+    <!-- Header -->
+    <nav class="navbar navbar-expand-lg navbar-light shadow">
+        <div class="container d-flex justify-content-between align-items-center">
+            <a class="navbar-brand text-success logo h1 align-self-center" href="#">
+                FAST
+            </a>
+            <button class="navbar-toggler border-0" type="button" data-bs-toggle="collapse" data-bs-target="#templatemo_main_nav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="templatemo_main_nav">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="login.html">LOGIN</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="register.html">REGISTRAR</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <!-- Close Header -->
+
+    <!-- Registro Section -->
+    <section class="vh-100 d-flex align-items-center" style="background-color: #f8f9fa;">
+        <div class="container py-5">
+            <div class="row d-flex justify-content-center align-items-center h-100">
+                <div class="col col-xl-6">
+                    <div class="card" style="border-radius: 1rem;">
+                        <div class="card-body p-5 text-black">
+                            <form id="registerForm">
+                                <div class="text-center mb-4">
+                                    <h1 class="fw-bold">Registro de Usuario</h1>
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <input type="text" id="username" class="form-control form-control-lg" placeholder="Nombre de usuario" required />
+                                </div>
+
+                                <div class="form-outline mb-4">
+                                    <input type="password" id="password" class="form-control form-control-lg" placeholder="Contraseña" required />
+                                </div>
+
+                                <div class="pt-1 mb-4">
+                                    <button class="btn btn-success btn-lg btn-block" type="submit">Registrar</button>
+                                </div>
+
+                                <p class="mb-5 pb-lg-2" style="color: #393f81;">¿Ya tienes cuenta? <a href="login.html" style="color: #393f81;">Inicia sesión aquí</a></p>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-dark text-light py-4">
+        <div class="container text-center">
+            <p>&copy; 2024 FAST Shop. Todos los derechos reservados.</p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script src="assets/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.getElementById('registerForm').onsubmit = async (e) => {
+            e.preventDefault(); // Previene el comportamiento predeterminado del formulario
+
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+
+            try {
+                const response = await fetch('http://127.0.0.1:5001/auth/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    alert('Usuario registrado exitosamente');
+                    window.location.href = 'login.html'; // Redirige al login
+                } else {
+                    alert(data.message || 'Error al registrar usuario');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Ocurrió un error al conectar con el servidor.');
+            }
+        };
+    </script>
+</body>
+
+</html>

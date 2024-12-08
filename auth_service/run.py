@@ -1,7 +1,6 @@
 import sys
 import os
 
-# Agregar el directorio raíz (ecommerce) al sys.path
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 
 from app import create_app, db
